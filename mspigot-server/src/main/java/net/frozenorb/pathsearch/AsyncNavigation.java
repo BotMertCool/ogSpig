@@ -25,8 +25,8 @@ public class AsyncNavigation extends Navigation {
 
     public AsyncNavigation(EntityInsentient entityinsentient, World world) {
         super(entityinsentient, world);
-        this.searchCache = new HashMap<UUID, SearchCacheEntry>();
-        this.positionSearchCache = new HashMap<PositionPathSearchType, SearchCacheEntryPosition>();
+        this.searchCache = new HashMap<>();
+        this.positionSearchCache = new HashMap<>();
         this.queuingManager = new PathSearchQueuingManager();
     }
 
@@ -88,22 +88,10 @@ public class AsyncNavigation extends Navigation {
         if (++this.cleanUpDelay > 100) {
             this.cleanUpDelay = 0;
             synchronized (this.searchCache) {
-                Iterator<Entry<UUID, SearchCacheEntry>> iter = this.searchCache.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Entry<UUID, SearchCacheEntry> entry = iter.next();
-                    if (entry.getValue().hasExpired()) {
-                        iter.remove();
-                    }
-                }
+                this.searchCache.entrySet().removeIf(entry -> entry.getValue().hasExpired());
             }
             synchronized (this.positionSearchCache) {
-                Iterator<Entry<PositionPathSearchType, SearchCacheEntryPosition>> iter2 = this.positionSearchCache.entrySet().iterator();
-                while (iter2.hasNext()) {
-                    Entry<PositionPathSearchType, SearchCacheEntryPosition> entry = iter2.next();
-                    if (entry.getValue().hasExpired()) {
-                        iter2.remove();
-                    }
-                }
+                this.positionSearchCache.entrySet().removeIf(entry -> entry.getValue().hasExpired());
             }
         }
     }
@@ -189,6 +177,5 @@ public class AsyncNavigation extends Navigation {
 
     private boolean offloadSearches() {
         return true;
-        //return Migot.getConfig().isPathSearchOffloadedFor(this.b);
     }
 }

@@ -1156,10 +1156,10 @@ public abstract class PlayerList {
                 ScoreboardScore scoreboardscore = entityhuman.getScoreboard().getPlayerScoreForObjective(entityhuman.getName(), scoreboardobjective);
 
                 i = scoreboardscore.getScore();
-                if (i < ((Integer) entry.getValue()).intValue() && flag) {
+                if (i < (Integer) entry.getValue() && flag) {
                     return false;
                 }
-            } while (i <= ((Integer) entry.getValue()).intValue() || flag);
+            } while (i <= (Integer) entry.getValue() || flag);
 
             return false;
         } else {
@@ -1172,11 +1172,11 @@ public abstract class PlayerList {
     }
 
     public void sendPacketNearby(EntityHuman entityhuman, double d0, double d1, double d2, double d3, int i, Packet packet) {
-        for (int j = 0; j < this.players.size(); ++j) {
-            EntityPlayer entityplayer = (EntityPlayer) this.players.get(j);
+        for (Object player : this.players) {
+            EntityPlayer entityplayer = (EntityPlayer) player;
 
             // CraftBukkit start - Test if player receiving packet can see the source of the packet
-            if (entityhuman != null && entityhuman instanceof EntityPlayer && !entityplayer.getBukkitEntity().canSee(((EntityPlayer) entityhuman).getBukkitEntity())) {
+            if (entityhuman instanceof EntityPlayer && !entityplayer.getBukkitEntity().canSee(((EntityPlayer) entityhuman).getBukkitEntity())) {
                 continue;
             }
             // CraftBukkit end
